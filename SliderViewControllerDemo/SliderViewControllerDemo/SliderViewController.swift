@@ -13,8 +13,8 @@ protocol SliderViewControllerDelegate: NSObjectProtocol {
 }
 class SliderViewController: UIViewController {
     public var delegate: SliderViewControllerDelegate?
-    private let titleSliderView: TitleSliderView
-    private let viewControllers: [UIViewController]
+    public let titleSliderView: TitleSliderView
+    let viewControllers: [UIViewController]
     private var superVC: UIViewController?
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -38,9 +38,10 @@ class SliderViewController: UIViewController {
         setUI()
     }
     private func setUI() {
-        view.addSubview(titleSliderView)
         view.addSubview(scrollView)
-        scrollView.frame = CGRect(x: 0, y: titleSliderView.frame.maxY, width: view.bounds.width, height: view.bounds.height - titleSliderView.bounds.height - 44 - UIApplication.shared.statusBarFrame.height)
+        view.addSubview(titleSliderView)
+//        scrollView.frame = CGRect(x: 0, y: titleSliderView.frame.maxY, width: view.bounds.width, height: view.bounds.height - titleSliderView.bounds.height - 44 - UIApplication.shared.statusBarFrame.height)
+         scrollView.frame = CGRect(x: 0, y: 40, width: view.bounds.width, height: view.bounds.height - titleSliderView.bounds.height - 44 - UIApplication.shared.statusBarFrame.height)
         scrollView.contentSize = CGSize(width: CGFloat(viewControllers.count) * ScreenW, height: scrollView.bounds.height)
 
         let viewW: CGFloat = scrollView.bounds.width
@@ -70,19 +71,21 @@ extension SliderViewController: UIScrollViewDelegate,TitleSliderViewDelegate{
 
 
 //MARK: - TitleSliderView
+let FIXED_TAG_COUNT = 6
 let ScreenW = UIScreen.main.bounds.width
-let LabelW = ScreenW / 6
+var LabelW = ScreenW / CGFloat(FIXED_TAG_COUNT)
 
 protocol TitleSliderViewDelegate: NSObjectProtocol {
     func titleSliderViewDidClick(index: Int)
 }
 class TitleSliderView: UIView {
+    
     private var titleSelColor: UIColor?
     private var previousLabel: UILabel?
     private var labels = [UILabel]()
     private var sliderViewController: SliderViewController?
-    private var titles = [String]()
-    var delegate: TitleSliderViewDelegate?
+    public var titles = [String]()
+    public var delegate: TitleSliderViewDelegate?
     private lazy var bottomLineView: UIView = {
         let bottomLineView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1.8))
         bottomLineView.layer.cornerRadius = bottomLineView.bounds.height * 0.5
@@ -102,7 +105,8 @@ class TitleSliderView: UIView {
     init(titles: [String], titleFont: UIFont? = nil, titleSelColor: UIColor?) {
         super.init(frame: CGRect(x: 0, y: 0, width: ScreenW, height: 40))
         self.titles = titles
-        scrollView.frame = CGRect(origin: CGPoint.zero, size: frame.size)
+        scrollView.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: frame.width, height: 40))
+        
         addSubview(scrollView)
         self.titleSelColor = titleSelColor
         setLabels(titleFont: titleFont)
@@ -120,10 +124,17 @@ class TitleSliderView: UIView {
             label.textAlignment = .center
             label.textColor = UIColor.black
             label.text = title
+            label.backgroundColor = .white
             titleFont != nil ? (label.font = titleFont) : (label.font = UIFont.systemFont(ofSize: 14, weight: .medium))
             
             scrollView.addSubview(label)
-            label.frame = CGRect(x: CGFloat(CFloat(index)) * LabelW, y: lbY, width: LabelW, height: lbH-2)
+            if titles.count < FIXED_TAG_COUNT {
+                LabelW = UIScreen.main.bounds.width / CGFloat(titles.count)
+                label.frame = CGRect(x: CGFloat(CFloat(index)) * LabelW, y: lbY, width: LabelW, height: 40-2)
+            }else{
+                label.frame = CGRect(x: CGFloat(CFloat(index)) * LabelW, y: lbY, width: LabelW, height: 40-2)
+            }
+            
             label.isUserInteractionEnabled = true
             let tapGes = UITapGestureRecognizer(target: self, action: #selector(lbClick(ges:)))
             label.addGestureRecognizer(tapGes)
@@ -163,14 +174,100 @@ class TitleSliderView: UIView {
     }
 }
 
+
+
+//class ExtendView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return 40
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EXTENDVIEWCOLLECTIONVIEWCELLID", for: indexPath)
+//
+//
+//        let btn = UIButton(type: .custom)
+//
+//        btn.frame = CGRect(x: 0, y: 0, width: 50, height: 20)
+//        let attrs = NSAttributedString(string: "哈哈", attributes: [NSAttributedString.Key.font:UIFont.systemFont(ofSize: 12, weight: .medium), NSAttributedString.Key.foregroundColor:UIColor.red])
+//        btn.setAttributedTitle(attrs, for: .normal)
+//        btn.center = cell.contentView.center
+//        cell.contentView.addSubview(btn)
+//        cell.backgroundColor = .green
+//        return cell
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+//    }
+//
+//
+//    lazy var collectionView: UICollectionView = {
+//        let flowLayout = UICollectionViewFlowLayout()
+//        flowLayout.itemSize = CGSize(width: 60, height: 25)
+////        flowLayout.minimumLineSpacing = 10
+//        flowLayout.minimumInteritemSpacing = 12
+//        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 80), collectionViewLayout: flowLayout)
+//        collectionView.delegate = self
+//        collectionView.dataSource = self
+//        collectionView.bounces = false
+//        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "EXTENDVIEWCOLLECTIONVIEWCELLID")
+//        collectionView.backgroundColor = .white
+//        collectionView.layer.borderColor = UIColor.lightGray.cgColor
+//        collectionView.layer.borderWidth = 0.5
+//        return collectionView
+//    }()
+//    lazy var extendBtn: UIButton = {
+//       let extendBtn = UIButton(type: .custom)
+//        extendBtn.setImage(#imageLiteral(resourceName: "anchor_post_bar_normal_18x18_"), for: .normal)
+//        extendBtn.sizeToFit()
+//        extendBtn.addTarget(self, action: #selector(extendBtnClick), for: .touchUpInside)
+//        return extendBtn
+//    }()
+//
+//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+//        let view = super.hitTest(point, with: event)
+//        let tmpPoint = extendBtn.convert(point, from: self)
+//        if extendBtn.point(inside: tmpPoint, with: event) {
+//            return extendBtn
+//        }
+//        return view
+//    }
+//
+//    @objc func extendBtnClick(){
+//        extendBtn.isSelected = !extendBtn.isSelected
+//        if extendBtn.isSelected {
+//            UIView.animate(withDuration: 0.35) {
+//                self.frame.origin.y += self.frame.height
+//            }
+//        }else{
+//            UIView.animate(withDuration: 0.35) {
+//                self.frame.origin.y -= self.frame.height
+//            }
+//        }
+//    }
+//
+//    init() {
+//        super.init(frame: CGRect(x: 0, y: -40, width: ScreenW, height: 80))
+//        self.backgroundColor = .clear
+//        extendBtn.frame.origin.x = frame.size.width - extendBtn.bounds.width
+//        extendBtn.frame.origin.y = frame.height
+//        addSubview(extendBtn)
+//        addSubview(collectionView)
+//        collectionView.reloadData()
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
+//}
+
 extension TitleSliderView: SliderViewControllerDelegate {
-    
     func SliderViewControllerScrollViewDidScroll(scrollView: UIScrollView) {
         let rate = scrollView.contentOffset.x / scrollView.bounds.width
         bottomLineView.center.x = rate * LabelW + LabelW * 0.5
-        
         if let lastComponent = ("\(rate)" as NSString).components(separatedBy: ".").last{
-            if Float(lastComponent) == 0{
+            if Float(lastComponent) == 0 {
                 let label = labels[Int(rate)]
                 label.textColor = titleSelColor
                 if previousLabel !== label {
