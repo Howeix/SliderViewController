@@ -13,9 +13,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let vcStrArr = ["新闻","娱乐"]
+        let vcStrArr = ["新闻","娱乐","体育","财经","教育","时尚","游戏","八卦","男性","女性","生活"]
         var vcArr = [UIViewController]()
         for _ in 0 ..< vcStrArr.count {
             let vc = UIViewController()
@@ -24,9 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         let sliderVC = SliderViewController(titles: vcStrArr, viewControllers: vcArr, titleSelColor: UIColor.magenta)
         let navvc = UINavigationController(rootViewController: sliderVC)
+        navvc.navigationBar.isTranslucent = false
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = navvc
         window?.makeKeyAndVisible()
+        
         return true
     }
 
