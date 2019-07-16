@@ -13,7 +13,7 @@ protocol SliderViewControllerDelegate: NSObjectProtocol {
 }
 class SliderViewController: UIViewController {
     public var delegate: SliderViewControllerDelegate?
-    public let titleSliderView: TitleSliderView
+    let titleSliderView: TitleSliderView
     let viewControllers: [UIViewController]
     private var superVC: UIViewController?
     private lazy var scrollView: UIScrollView = {
@@ -27,6 +27,7 @@ class SliderViewController: UIViewController {
     }()
     lazy var extV: ExtendView = {
         let extV = ExtendView()
+        extV.titleSliderView = titleSliderView
         return extV
     }()
     init(titles:[String], superVC: UIViewController? = nil, viewControllers: [UIViewController], titleSelColor: UIColor? = UIColor.black) {
@@ -40,7 +41,6 @@ class SliderViewController: UIViewController {
         view.backgroundColor = UIColor.white
         setUI()
         if titleSliderView.titles.count > FIXED_TAG_COUNT {
-//            _ = extV
             view.addSubview(extV)
             view.insertSubview(extV, belowSubview: titleSliderView)
         }
@@ -48,7 +48,6 @@ class SliderViewController: UIViewController {
     private func setUI() {
         view.addSubview(scrollView)
         view.addSubview(titleSliderView)
-//        scrollView.frame = CGRect(x: 0, y: titleSliderView.frame.maxY, width: view.bounds.width, height: view.bounds.height - titleSliderView.bounds.height - 44 - UIApplication.shared.statusBarFrame.height)
          scrollView.frame = CGRect(x: 0, y: 40, width: view.bounds.width, height: view.bounds.height - titleSliderView.bounds.height - 44 - UIApplication.shared.statusBarFrame.height)
         scrollView.contentSize = CGSize(width: CGFloat(viewControllers.count) * ScreenW, height: scrollView.bounds.height)
 
@@ -100,21 +99,14 @@ class SliderViewController: UIViewController {
         }
         
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//            if let cell = collectionView.cellForItem(at: indexPath) {
-//                for btn in cell.contentView.subviews {
-//                    if btn.isKind(of: UIButton.self) {
-//                        let r_btn = btn as! UIButton
-//                        r_btn.isSelected = true
-//                    }
-//                }
-//            }
-            collectionView.reloadData()
+            let curLb = titleSliderView?.labels[indexPath.row]
+            titleSliderView?.lbClick(ges: (curLb?.gestureRecognizers!.first)!)
         }
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
             return UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         }
-        
+       var titleSliderView: TitleSliderView?
        public lazy var collectionView: UICollectionView = {
             let flowLayout = UICollectionViewFlowLayout()
             flowLayout.itemSize = CGSize(width: 60, height: 25)
@@ -208,7 +200,7 @@ class TitleSliderView: UIView {
     
     private var titleSelColor: UIColor?
     private var previousLabel: UILabel?
-    private var labels = [UILabel]()
+    var labels = [UILabel]()
     private var sliderViewController: SliderViewController?
     public var titles = [String]()
     public var delegate: TitleSliderViewDelegate?
@@ -277,7 +269,7 @@ class TitleSliderView: UIView {
         scrollView.contentSize = CGSize(width: CGFloat(LabelW * CGFloat(titles.count)), height: lbH)
     }
 
-    @objc private func lbClick(ges: UIGestureRecognizer) {
+    @objc func lbClick(ges: UIGestureRecognizer) {
         let label = ges.view as! UILabel
         delegate?.titleSliderViewDidClick(index: label.tag - 2048)
         UIView.animate(withDuration: 0.25) {
