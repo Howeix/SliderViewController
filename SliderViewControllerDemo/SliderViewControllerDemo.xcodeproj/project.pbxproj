@@ -15,6 +15,7 @@
 		04B2D9EB22B3663900F3AD35 /* SliderViewControllerDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2D9EA22B3663900F3AD35 /* SliderViewControllerDemoTests.swift */; };
 		04B2D9F622B3663900F3AD35 /* SliderViewControllerDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2D9F522B3663900F3AD35 /* SliderViewControllerDemoUITests.swift */; };
 		04B2DA0422B3664000F3AD35 /* SliderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2DA0322B3664000F3AD35 /* SliderViewController.swift */; };
+		0E05B51B2315318400663340 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E05B51A2315318400663340 /* Person.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		04B2D9F522B3663900F3AD35 /* SliderViewControllerDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderViewControllerDemoUITests.swift; sourceTree = "<group>"; };
 		04B2D9F722B3663900F3AD35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04B2DA0322B3664000F3AD35 /* SliderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderViewController.swift; sourceTree = "<group>"; };
+		0E05B51A2315318400663340 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				04B2DA0322B3664000F3AD35 /* SliderViewController.swift */,
 				04B2D9D522B3663700F3AD35 /* AppDelegate.swift */,
 				04B2D9D722B3663700F3AD35 /* ViewController.swift */,
+				0E05B51A2315318400663340 /* Person.swift */,
 				04B2D9D922B3663700F3AD35 /* Main.storyboard */,
 				04B2D9DC22B3663800F3AD35 /* Assets.xcassets */,
 				04B2D9DE22B3663800F3AD35 /* LaunchScreen.storyboard */,
@@ -261,6 +264,7 @@
 			files = (
 				04B2DA0422B3664000F3AD35 /* SliderViewController.swift in Sources */,
 				04B2D9D822B3663700F3AD35 /* ViewController.swift in Sources */,
+				0E05B51B2315318400663340 /* Person.swift in Sources */,
 				04B2D9D622B3663700F3AD35 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
